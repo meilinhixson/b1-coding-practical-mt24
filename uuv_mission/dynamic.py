@@ -74,9 +74,9 @@ class Mission:
         return cls(reference, cave_height, cave_depth)
 
     @classmethod
-    def from_csv(cls, file_name: str):
+    def from_csv(cls, file_path: str):
         # You are required to implement this method
-        extract = pd.read_csv(file_name)
+        extract = pd.read_csv(file_path)
         reference = extract['reference'].values
         cave_height = extract['cave_height'].values
         cave_depth = extract['cave_depth'].values
