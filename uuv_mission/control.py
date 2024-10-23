@@ -2,7 +2,7 @@
 
 # control.py
 class PDController:
-    def __init__(self, kp=0.15, kd=0.6):  # Default gains
+    def __init__(self, kp, kd):  # Default gains
         self.kp = kp # Proportional gain
         self.kd = kd  # Derivative gain
         self.previous_error = 0     # Error at the previous time step
