@@ -7,9 +7,12 @@ class PDController:
         self.kd = kd  # Derivative gain
         self.previous_error = 0     # Error at the previous time step
 
-    def compute_control_action(self, reference, output, dt):  
-        error = reference - output
+ 
+    
+    def compute(self, error, dt) -> float:
         derivative = (error - self.previous_error) / dt
-        control_action = self.kp * error + self.kd * derivative  
+        # Compute control output by using the PD formula
+        output = self.kp * error + self.kd * derivative
+        # Update previous error for next iteration
         self.previous_error = error
-        return control_action
+        return output
