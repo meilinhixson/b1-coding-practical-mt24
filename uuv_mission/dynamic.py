@@ -2,7 +2,8 @@ from __future__ import annotations
 from dataclasses import dataclass
 import numpy as np
 import matplotlib.pyplot as plt
-from .terrain import generate_reference_and_limits
+from terrain import generate_reference_and_limits
+import pandas as pd
 
 class Submarine:
     def __init__(self):
@@ -74,9 +75,13 @@ class Mission:
         return cls(reference, cave_height, cave_depth)
 
     @classmethod
-    def from_csv(cls, file_name: str):
-        # You are required to implement this method
-        pass
+    def from_csv(cls, file_path: str):
+        # Pandas used to read csv files and load data
+        extract = pd.read_csv(file_path)
+        reference = extract['reference'].values
+        cave_height = extract['cave_height'].values
+        cave_depth = extract['cave_depth'].values
+        return cls(reference, cave_height, cave_depth)   
 
 
 class ClosedLoop:
@@ -94,10 +99,14 @@ class ClosedLoop:
         actions = np.zeros(T)
         self.plant.reset_state()
 
-        for t in range(T):
+        for t in range(T):  
             positions[t] = self.plant.get_position()
             observation_t = self.plant.get_depth()
+            
             # Call your controller here
+            reference = mission.reference[t]   # Reference at time t
+            error = reference - observation_t # Error at time t
+            actions[t] = self.controller.compute(error, self.plant.dt)   # Compute control action at time t
             self.plant.transition(actions[t], disturbances[t])
 
         return Trajectory(positions)
